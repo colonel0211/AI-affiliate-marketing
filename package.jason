@@ -1,0 +1,58 @@
+{
+  "name": "ai-affiliate-marketing-automation",
+  "version": "1.0.0",
+  "description": "AI Affiliate Marketing Automation Server - Target: $1,000,000/month",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "build": "echo 'Build complete'",
+    "test": "echo 'No tests specified'"
+  },
+  "keywords": [
+    "ai",
+    "affiliate-marketing",
+    "automation",
+    "youtube",
+    "openai",
+    "replicate",
+    "stability-ai"
+  ],
+  "author": "AI Affiliate Marketer",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "node-cron": "^3.0.3",
+    "googleapis": "^128.0.0",
+    "openai": "^4.24.0",
+    "replicate": "^0.25.1",
+    "axios": "^1.6.2",
+    "form-data": "^4.0.0",
+    "multer": "^1.4.5-lts.1",
+    "sharp": "^0.33.1",
+    "ffmpeg-static": "^5.2.0",
+    "fluent-ffmpeg": "^2.1.2",
+    "puppeteer": "^21.6.1",
+    "cheerio": "^1.0.0-rc.12",
+    "helmet": "^7.1.0",
+    "compression": "^1.7.4"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/ai-affiliate-marketing-automation.git"
+  },
+  "homepage": "https://github.com/yourusername/ai-affiliate-marketing-automation#readme",
+  "bugs": {
+    "url": "https://github.com/yourusername/ai-affiliate-marketing-automation/issues"
+  }
+}
