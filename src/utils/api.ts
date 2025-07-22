@@ -138,6 +138,37 @@ class ApiClient {
     return this.request('/analytics/platform-stats');
   }
 
+  // Scraping methods
+  async getAllTrendingContent(limit?: number) {
+    const params = limit ? `?limit=${limit}` : '';
+    return this.request(`/scraping/trending${params}`);
+  }
+
+  async scrapeYouTube(limit?: number) {
+    const params = limit ? `?limit=${limit}` : '';
+    return this.request(`/scraping/youtube${params}`);
+  }
+
+  async scrapeInstagram(limit?: number) {
+    const params = limit ? `?limit=${limit}` : '';
+    return this.request(`/scraping/instagram${params}`);
+  }
+
+  async scrapeTikTok(limit?: number) {
+    const params = limit ? `?limit=${limit}` : '';
+    return this.request(`/scraping/tiktok${params}`);
+  }
+
+  async getScrapingServiceStatus() {
+    return this.request('/scraping/services/status');
+  }
+
+  async testScrapingServices() {
+    return this.request('/scraping/services/test', {
+      method: 'POST',
+    });
+  }
+
   // System methods
   async getSystemStatus() {
     return this.request('/system/status');

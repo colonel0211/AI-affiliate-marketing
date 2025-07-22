@@ -5,6 +5,7 @@ import aiProviderRoutes from './aiProviders';
 import analyticsRoutes from './analytics';
 import socialRoutes from './social';
 import systemRoutes from './system';
+import scrapingRoutes from './scraping';
 
 const router = Router();
 
@@ -14,6 +15,7 @@ router.use('/ai-providers', aiProviderRoutes);
 router.use('/analytics', analyticsRoutes);
 router.use('/social', socialRoutes);
 router.use('/system', systemRoutes);
+router.use('/scraping', scrapingRoutes);
 
 // Health check
 router.get('/health', (req, res) => {

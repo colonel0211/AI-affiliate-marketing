@@ -2,12 +2,14 @@ import { AIProviderManager } from '../ai/AIProviderManager';
 import { YouTubeService } from '../social/YouTubeService';
 import { InstagramService } from '../social/InstagramService';
 import { TikTokService } from '../social/TikTokService';
+import { ScrapingManager } from '../scraping/ScrapingManager';
 import Content from '../../models/Content';
 import Campaign from '../../models/Campaign';
 import { logger } from '../../utils/logger';
 
 export class ContentGenerationService {
   private aiProviderManager = new AIProviderManager();
+  private scrapingManager = new ScrapingManager();
   private youtubeService = new YouTubeService();
   private instagramService = new InstagramService();
   private tiktokService = new TikTokService();
@@ -16,19 +18,8 @@ export class ContentGenerationService {
     try {
       logger.info('Starting content scraping...');
 
-      // Scrape from all platforms
-      const [youtubeTrending, instagramTrending, tiktokTrending] = await Promise.all([
-        this.youtubeService.getTrendingVideos(),
-        this.instagramService.getTrendingContent(),
-        this.tiktokService.getTrendingVideos()
-      ]);
-
-      // Process and store trending content for analysis
-      const allTrending = [
-        ...youtubeTrending.map(v => ({ ...v, platform: 'youtube' })),
-        ...instagramTrending.map(v => ({ ...v, platform: 'instagram' })),
-        ...tiktokTrending.map(v => ({ ...v, platform: 'tiktok' }))
-      ];
+      // Use the new scraping manager with multiple services and failover
+      const allTrending = await this.scrapingManager.getAllTrendingContent();
 
       logger.info(`Scraped ${allTrending.length} trending content pieces`);
       return allTrending;
