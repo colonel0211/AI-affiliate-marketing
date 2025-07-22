@@ -1,5 +1,10 @@
 node_modules
 npm-debug.log
 Dockerfile
-.dockerignore
+docker-compose.yml
+.git
 .env
+.env.*
+README.md
+*.md
+healthcheck.js
