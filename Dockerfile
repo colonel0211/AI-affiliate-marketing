@@ -1,14 +1,21 @@
-# Build Stage
+# Stage 1 - Build
 FROM node:18 AS builder
+
 WORKDIR /app
 COPY . .
 RUN npm install
 RUN npm run build
 
-# Production Stage
-FROM node:18 AS production
+# Stage 2 - Serve
+FROM node:18-alpine
+
 WORKDIR /app
+
+# Install serve to serve static files
 RUN npm install -g serve
-COPY --from=builder /app/dist ./dist
-EXPOSE 8000
-CMD ["serve", "-s", "dist", "-l", "8000"]
+
+# Copy only the final build output
+COPY --from=builder /app/dist .
+
+EXPOSE 3000
+CMD ["serve", "-s", ".", "-l", "3000"]
