@@ -1,21 +1,33 @@
-# Stage 1 - Build
+# Stage 1: Build
 FROM node:18 AS builder
 
 WORKDIR /app
+
+# Copy package files separately to leverage Docker cache
+COPY package.json package-lock.json ./
+
+# Install dependencies
+RUN npm ci
+
+# Copy all source files
 COPY . .
-RUN npm install
+
+# Build the production app
 RUN npm run build
 
-# Stage 2 - Serve
+# Stage 2: Serve
 FROM node:18-alpine
 
 WORKDIR /app
 
-# Install serve to serve static files
+# Install serve globally
 RUN npm install -g serve
 
-# Copy only the final build output
-COPY --from=builder /app/dist .
+# Copy built assets from builder stage
+COPY --from=builder /app/dist ./dist
 
-EXPOSE 3000
-CMD ["serve", "-s", ".", "-l", "3000"]
+# Expose port 8000
+EXPOSE 8000
+
+# Start serve
+CMD ["serve", "-s", "dist", "-l", "8000"]
