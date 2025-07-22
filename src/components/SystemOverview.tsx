@@ -1,4 +1,5 @@
 import React from 'react';
+import { useSystemStatus, useAnalyticsOverview } from '../hooks/useApi';
 import { 
   Activity, 
   DollarSign, 
@@ -11,10 +12,21 @@ import {
 } from 'lucide-react';
 
 const SystemOverview = () => {
+  const { data: systemStatus, loading: statusLoading } = useSystemStatus();
+  const { data: analytics, loading: analyticsLoading } = useAnalyticsOverview();
+
+  if (statusLoading || analyticsLoading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="text-white">Loading system data...</div>
+      </div>
+    );
+  }
+
   const stats = [
     {
       title: 'Monthly Revenue',
-      value: '$23,456',
+      value: analytics?.revenue?.monthly || '$23,456',
       target: '$1,000,000',
       icon: DollarSign,
       color: 'text-green-400',
@@ -22,7 +34,7 @@ const SystemOverview = () => {
     },
     {
       title: 'Videos Generated',
-      value: '1,247',
+      value: analytics?.content?.total || '1,247',
       subtitle: 'This month',
       icon: Video,
       color: 'text-blue-400',
@@ -30,7 +42,7 @@ const SystemOverview = () => {
     },
     {
       title: 'Active Campaigns',
-      value: '24',
+      value: analytics?.campaigns?.active || '24',
       subtitle: 'Running',
       icon: Activity,
       color: 'text-purple-400',
@@ -46,12 +58,12 @@ const SystemOverview = () => {
     }
   ];
 
-  const systemStatus = [
-    { name: 'Content Scraper', status: 'active', lastRun: '2 min ago' },
-    { name: 'AI Video Generator', status: 'active', lastRun: '5 min ago' },
-    { name: 'Upload Scheduler', status: 'active', lastRun: '1 min ago' },
+  const systemComponents = [
+    { name: 'Content Scraper', status: systemStatus?.services?.contentGeneration || 'active', lastRun: '2 min ago' },
+    { name: 'AI Video Generator', status: systemStatus?.services?.aiProviders || 'active', lastRun: '5 min ago' },
+    { name: 'Upload Scheduler', status: systemStatus?.services?.socialMediaIntegration || 'active', lastRun: '1 min ago' },
     { name: 'Revenue Tracker', status: 'active', lastRun: '30 sec ago' },
-    { name: 'Affiliate Optimizer', status: 'warning', lastRun: '15 min ago' }
+    { name: 'Affiliate Optimizer', status: systemStatus?.services?.scheduler || 'warning', lastRun: '15 min ago' }
   ];
 
   return (
@@ -92,7 +104,7 @@ const SystemOverview = () => {
         <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
           <h3 className="text-lg font-semibold text-white mb-4">System Components</h3>
           <div className="space-y-3">
-            {systemStatus.map((component, index) => (
+            {systemComponents.map((component, index) => (
               <div key={index} className="flex items-center justify-between py-2">
                 <div className="flex items-center space-x-3">
                   {component.status === 'active' ? (

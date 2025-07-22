@@ -4,7 +4,7 @@ import helmet from 'helmet';
 import dotenv from 'dotenv';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
-import mongoose from 'mongoose';
+import { connectDatabase } from './config/database';
 import { errorHandler } from './middleware/errorHandler';
 import { logger } from './utils/logger';
 import { initializeJobs } from './services/jobScheduler';
@@ -48,20 +48,9 @@ io.on('connection', (socket) => {
 // Make io available globally
 app.set('io', io);
 
-// Database connection
-const connectDB = async () => {
-  try {
-    await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/ai-affiliate');
-    logger.info('MongoDB connected successfully');
-  } catch (error) {
-    logger.error('MongoDB connection failed:', error);
-    process.exit(1);
-  }
-};
-
-// Initialize jobs
+// Initialize system
 const initializeSystem = async () => {
-  await connectDB();
+  await connectDatabase();
   await initializeJobs();
   logger.info('AI Affiliate Marketing System initialized');
 };

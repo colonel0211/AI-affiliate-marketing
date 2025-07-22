@@ -1,6 +1,7 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import { Table, Column, Model, DataType, PrimaryKey, AutoIncrement, CreatedAt, UpdatedAt } from 'sequelize-typescript';
 
-export interface IAIProvider extends Document {
+export interface IAIProvider {
+  id?: number;
   name: string;
   type: 'image' | 'video' | 'voice' | 'text';
   status: 'active' | 'standby' | 'quota_reached' | 'error';
@@ -14,26 +15,99 @@ export interface IAIProvider extends Document {
   quality: number;
   lastUsed: Date;
   resetTime: Date;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
-const AIProviderSchema = new Schema<IAIProvider>({
-  name: { type: String, required: true, unique: true },
-  type: { type: String, enum: ['image', 'video', 'voice', 'text'], required: true },
-  status: { type: String, enum: ['active', 'standby', 'quota_reached', 'error'], default: 'standby' },
-  apiKey: { type: String },
-  baseUrl: { type: String, required: true },
-  dailyLimit: { type: Number, required: true },
-  usageToday: { type: Number, default: 0 },
-  successRate: { type: Number, default: 100 },
-  avgResponseTime: { type: Number, default: 0 },
-  cost: { type: String, default: 'Free' },
-  quality: { type: Number, default: 8.0 },
-  lastUsed: { type: Date, default: Date.now },
-  resetTime: { type: Date, default: Date.now }
-}, {
-  timestamps: true
-});
+@Table({
+  tableName: 'ai_providers',
+  timestamps: true,
+})
+export default class AIProvider extends Model<IAIProvider> implements IAIProvider {
+  @PrimaryKey
+  @AutoIncrement
+  @Column(DataType.INTEGER)
+  id!: number;
 
-export default mongoose.model<IAIProvider>('AIProvider', AIProviderSchema);
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+    unique: true,
+  })
+  name!: string;
+
+  @Column({
+    type: DataType.ENUM('image', 'video', 'voice', 'text'),
+    allowNull: false,
+  })
+  type!: 'image' | 'video' | 'voice' | 'text';
+
+  @Column({
+    type: DataType.ENUM('active', 'standby', 'quota_reached', 'error'),
+    defaultValue: 'standby',
+  })
+  status!: 'active' | 'standby' | 'quota_reached' | 'error';
+
+  @Column(DataType.STRING)
+  apiKey?: string;
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+  })
+  baseUrl!: string;
+
+  @Column({
+    type: DataType.INTEGER,
+    allowNull: false,
+  })
+  dailyLimit!: number;
+
+  @Column({
+    type: DataType.INTEGER,
+    defaultValue: 0,
+  })
+  usageToday!: number;
+
+  @Column({
+    type: DataType.DECIMAL(5, 2),
+    defaultValue: 100,
+  })
+  successRate!: number;
+
+  @Column({
+    type: DataType.INTEGER,
+    defaultValue: 0,
+  })
+  avgResponseTime!: number;
+
+  @Column({
+    type: DataType.STRING,
+    defaultValue: 'Free',
+  })
+  cost!: string;
+
+  @Column({
+    type: DataType.DECIMAL(3, 1),
+    defaultValue: 8.0,
+  })
+  quality!: number;
+
+  @Column({
+    type: DataType.DATE,
+    defaultValue: DataType.NOW,
+  })
+  lastUsed!: Date;
+
+  @Column({
+    type: DataType.DATE,
+    defaultValue: DataType.NOW,
+  })
+  resetTime!: Date;
+
+  @CreatedAt
+  createdAt!: Date;
+
+  @UpdatedAt
+  updatedAt!: Date;
+}
